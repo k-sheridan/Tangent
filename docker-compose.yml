@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # Build the library
+  build:
+    build:
+      context: .
+      target: builder
+    image: argmin:builder
+    volumes:
+      - .:/argmin
+      - build-cache:/argmin/build
+    working_dir: /argmin
+
+  # Run tests
+  test:
+    build:
+      context: .
+      target: test
+    image: argmin:test
+    depends_on:
+      - build
+    volumes:
+      - .:/argmin
+      - build-cache:/argmin/build
+    command: ["./test/ArgMinTests", "--gtest_color=yes"]
+
+  # Run benchmarks
+  benchmark:
+    build:
+      context: .
+      target: benchmark
+    image: argmin:benchmark
+    depends_on:
+      - build
+    volumes:
+      - .:/argmin
+      - build-cache:/argmin/build
+    command: ["./bench/ArgMinBenchmarks", "--benchmark_repetitions=3"]
+
+  # Development environment
+  dev:
+    build:
+      context: .
+      target: dev
+    image: argmin:dev
+    volumes:
+      - .:/argmin
+      - build-cache:/argmin/build
+    working_dir: /argmin
+    stdin_open: true
+    tty: true
+    command: ["/bin/bash"]
+
+volumes:
+  build-cache:

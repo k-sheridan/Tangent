@@ -1,0 +1,17 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+# Find required dependencies
+find_dependency(Eigen3 3.4)
+find_dependency(Sophus)
+
+# Find optional dependencies
+if(@ARGMIN_USE_SPDLOG@)
+  find_dependency(spdlog)
+endif()
+
+# Include the targets file
+include("${CMAKE_CURRENT_LIST_DIR}/ArgMinTargets.cmake")
+
+check_required_components(ArgMin)

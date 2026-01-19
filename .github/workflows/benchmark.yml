@@ -1,0 +1,102 @@
+name: Benchmarks
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  benchmark-normal:
+    name: Benchmark (Normal)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-normal-${{ hashFiles('**/Dockerfile', '**/CMakeLists.txt', 'cmake/**') }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-normal-
+
+      - name: Build benchmark image
+        run: docker-compose build benchmark
+
+      - name: Run benchmarks
+        run: docker-compose up --exit-code-from benchmark benchmark 2>&1 | tee benchmark-results.txt
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: benchmark-results-normal
+          path: benchmark-results.txt
+
+  benchmark-asan:
+    name: Benchmark (AddressSanitizer)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache-asan
+          key: ${{ runner.os }}-buildx-asan-${{ hashFiles('**/Dockerfile', '**/CMakeLists.txt', 'cmake/**') }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-asan-
+
+      - name: Build ASAN benchmark image
+        run: docker-compose build benchmark-asan
+
+      - name: Run benchmarks with ASAN
+        run: docker-compose up --exit-code-from benchmark-asan benchmark-asan 2>&1 | tee benchmark-results-asan.txt
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: benchmark-results-asan
+          path: benchmark-results-asan.txt
+
+  benchmark-ubsan:
+    name: Benchmark (UndefinedBehaviorSanitizer)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache-ubsan
+          key: ${{ runner.os }}-buildx-ubsan-${{ hashFiles('**/Dockerfile', '**/CMakeLists.txt', 'cmake/**') }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-ubsan-
+
+      - name: Build UBSAN benchmark image
+        run: docker-compose build benchmark-ubsan
+
+      - name: Run benchmarks with UBSAN
+        run: docker-compose up --exit-code-from benchmark-ubsan benchmark-ubsan 2>&1 | tee benchmark-results-ubsan.txt
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: benchmark-results-ubsan
+          path: benchmark-results-ubsan.txt

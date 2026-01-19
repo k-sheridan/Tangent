@@ -52,5 +52,63 @@ services:
     tty: true
     command: ["/bin/bash"]
 
+  # ASAN tests
+  test-asan:
+    build:
+      context: .
+      target: test-asan
+    image: argmin:test-asan
+    volumes:
+      - .:/argmin
+      - build-cache-asan:/argmin/build
+    command: ["./test/ArgMinTests", "--gtest_color=yes"]
+
+  # ASAN benchmarks
+  benchmark-asan:
+    build:
+      context: .
+      target: benchmark-asan
+    image: argmin:benchmark-asan
+    volumes:
+      - .:/argmin
+      - build-cache-asan:/argmin/build
+    command: ["./bench/ArgMinBenchmarks", "--benchmark_repetitions=3"]
+
+  # TSAN tests
+  test-tsan:
+    build:
+      context: .
+      target: test-tsan
+    image: argmin:test-tsan
+    volumes:
+      - .:/argmin
+      - build-cache-tsan:/argmin/build
+    command: ["./test/ArgMinTests", "--gtest_color=yes"]
+
+  # UBSAN tests
+  test-ubsan:
+    build:
+      context: .
+      target: test-ubsan
+    image: argmin:test-ubsan
+    volumes:
+      - .:/argmin
+      - build-cache-ubsan:/argmin/build
+    command: ["./test/ArgMinTests", "--gtest_color=yes"]
+
+  # UBSAN benchmarks
+  benchmark-ubsan:
+    build:
+      context: .
+      target: benchmark-ubsan
+    image: argmin:benchmark-ubsan
+    volumes:
+      - .:/argmin
+      - build-cache-ubsan:/argmin/build
+    command: ["./bench/ArgMinBenchmarks", "--benchmark_repetitions=3"]
+
 volumes:
   build-cache:
+  build-cache-asan:
+  build-cache-tsan:
+  build-cache-ubsan:

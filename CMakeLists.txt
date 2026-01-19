@@ -10,6 +10,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(ARGMIN_BUILD_TESTS "Build tests" ON)
 option(ARGMIN_BUILD_BENCHMARKS "Build benchmarks" OFF)
 option(ARGMIN_USE_SPDLOG "Enable spdlog logging" OFF)
+option(ARGMIN_ENABLE_ASAN "Enable AddressSanitizer" OFF)
+option(ARGMIN_ENABLE_TSAN "Enable ThreadSanitizer" OFF)
+option(ARGMIN_ENABLE_UBSAN "Enable UndefinedBehaviorSanitizer" OFF)
+
+# Validate sanitizer options (ASAN and TSAN are incompatible)
+if(ARGMIN_ENABLE_ASAN AND ARGMIN_ENABLE_TSAN)
+  message(FATAL_ERROR "ASAN and TSAN cannot be enabled simultaneously")
+endif()
 
 # Create header-only library target
 add_library(ArgMin INTERFACE)

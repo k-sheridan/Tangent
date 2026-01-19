@@ -42,7 +42,7 @@ RUN cmake -B build -G Ninja \
     -DCMAKE_CXX_COMPILER=g++-12 \
     -DARGMIN_BUILD_TESTS=ON \
     -DARGMIN_BUILD_BENCHMARKS=ON \
-    -DARGMIN_USE_SPDLOG=OFF
+    -DARGMIN_USE_SPDLOG=ON
 
 # Build everything
 RUN cmake --build build --parallel $(nproc)
@@ -108,7 +108,7 @@ RUN cmake -B build -G Ninja \
     -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address" \
     -DARGMIN_BUILD_TESTS=ON \
     -DARGMIN_BUILD_BENCHMARKS=ON \
-    -DARGMIN_USE_SPDLOG=OFF
+    -DARGMIN_USE_SPDLOG=ON
 
 RUN cmake --build build --parallel $(nproc)
 
@@ -159,7 +159,7 @@ RUN cmake -B build -G Ninja \
     -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=thread" \
     -DARGMIN_BUILD_TESTS=ON \
     -DARGMIN_BUILD_BENCHMARKS=ON \
-    -DARGMIN_USE_SPDLOG=OFF \
+    -DARGMIN_USE_SPDLOG=ON \
     -DCMAKE_GTEST_DISCOVER_TESTS_DISCOVERY_MODE=PRE_TEST
 
 RUN cmake --build build --parallel $(nproc)
@@ -205,7 +205,7 @@ RUN cmake -B build -G Ninja \
     -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=undefined" \
     -DARGMIN_BUILD_TESTS=ON \
     -DARGMIN_BUILD_BENCHMARKS=ON \
-    -DARGMIN_USE_SPDLOG=OFF
+    -DARGMIN_USE_SPDLOG=ON
 
 RUN cmake --build build --parallel $(nproc)
 

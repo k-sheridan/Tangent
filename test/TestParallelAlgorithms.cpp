@@ -1,5 +1,6 @@
 
 #include "argmin/ParallelAlgorithms/ParallelAlgorithms.h"
+#include "argmin/Logging.h"
 #include <random>
 
 #include <gtest/gtest.h>
@@ -24,7 +25,7 @@ TEST(ParallelAlgorithmsTest, parallel_transform)
     QDVO::ParallelAlgorithms::transform(QDVO::ParallelAlgorithms::ExecutionType::PARALLEL_CPU, numbers.begin(), numbers.end(),result2.begin(), fn);
     for (int i = 0; i < result.size(); ++i)
     {
-        //std::cout << result.at(i) << std::endl;
+        // LOG_INFO("Result: {}", result.at(i));
         EXPECT_EQ(result.at(i), result2.at(i));
     }
 }
@@ -51,7 +52,7 @@ TEST(ParallelAlgorithmsTest, parallel_transform_binary)
     QDVO::ParallelAlgorithms::transform(QDVO::ParallelAlgorithms::ExecutionType::PARALLEL_CPU, numbers.begin(), numbers.end(), numbers2.begin(), result2.begin(), fn);
     for (int i = 0; i < result.size(); ++i)
     {
-        //std::cout << result.at(i) << std::endl;
+        // LOG_INFO("Result: {}", result.at(i));
         EXPECT_EQ(result.at(i), result2.at(i));
     }
 }
@@ -73,7 +74,7 @@ TEST(ParallelAlgorithmsTest, parallel_for_each)
     QDVO::ParallelAlgorithms::for_each(QDVO::ParallelAlgorithms::ExecutionType::PARALLEL_CPU, moreNumbers.begin(), moreNumbers.end(), fn);
     for (int i = 0; i < numbers.size(); ++i)
     {
-        //std::cout << result.at(i) << std::endl;
+        // LOG_INFO("Result: {}", numbers.at(i));
         EXPECT_EQ(numbers.at(i), moreNumbers.at(i));
     }
 }

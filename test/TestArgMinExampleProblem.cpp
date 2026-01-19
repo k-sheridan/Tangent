@@ -409,8 +409,8 @@ TEST_F(PSDSchurSolverTest, SolveSmallSlamProblemLM) {
   auto result = solver.solveLevenbergMarquardt(variableContainer,
                                                errorTermContainer, prior);
 
-  std::cout << "Iterations: " << result.whitenedSqError.size()
-            << " final error: " << result.whitenedSqError.back() << std::endl;
+  LOG_INFO("Iterations: {}  final error: {}", result.whitenedSqError.size(),
+           result.whitenedSqError.back());
 
   // Verify that the errors have been reduced.
   errorTermContainer.at(errorTermKey1).evaluate(variableContainer);
@@ -434,9 +434,9 @@ TEST_F(PSDSchurSolverTest, SolveSmallSlamProblemLM) {
   auto previousTargetValue = variableContainer.at(targetKey).value;
   result = solver.solveLevenbergMarquardt(variableContainer, errorTermContainer,
                                           prior);
-  std::cout << "Iterations: " << result.whitenedSqError.size()
-            << " final error: " << result.whitenedSqError.back()
-            << " solver dimension: " << solver.totalDimension << std::endl;
+  LOG_INFO("Iterations: {}  final error: {}  solver dimension: {}",
+           result.whitenedSqError.size(), result.whitenedSqError.back(),
+           solver.totalDimension);
   EXPECT_NEAR(previousDssValue, variableContainer.at(dssKey).value, 1e-6);
   EXPECT_NEAR(
       (previousHostValue.inverse() * variableContainer.at(hostKey).value)
@@ -464,9 +464,9 @@ TEST_F(PSDSchurSolverTest, SolveSmallSlamProblemLM) {
   // prior.removeUnsedVariables(variableContainer);
   result = solver.solveLevenbergMarquardt(variableContainer, errorTermContainer,
                                           prior);
-  std::cout << "Iterations: " << result.whitenedSqError.size()
-            << " final error: " << result.whitenedSqError.back()
-            << " solver dimension: " << solver.totalDimension << std::endl;
+  LOG_INFO("Iterations: {}  final error: {}  solver dimension: {}",
+           result.whitenedSqError.size(), result.whitenedSqError.back(),
+           solver.totalDimension);
   LOG_TRACE("Finished solve.");
   EXPECT_NEAR(previousDssValue, variableContainer.at(dssKey).value, 1e-6);
   EXPECT_NEAR(
@@ -491,9 +491,9 @@ TEST_F(PSDSchurSolverTest, SolveSmallSlamProblemLM) {
   // prior.removeUnsedVariables(variableContainer);
   result = solver.solveLevenbergMarquardt(variableContainer, errorTermContainer,
                                           prior);
-  std::cout << "Iterations: " << result.whitenedSqError.size()
-            << " final error: " << result.whitenedSqError.back()
-            << " solver dimension: " << solver.totalDimension << std::endl;
+  LOG_INFO("Iterations: {}  final error: {}  solver dimension: {}",
+           result.whitenedSqError.size(), result.whitenedSqError.back(),
+           solver.totalDimension);
   EXPECT_NEAR(previousDssValue, variableContainer.at(dssKey).value, 1e-6);
 //  EXPECT_NEAR(
 //      (previousHostValue.inverse() * variableContainer.at(hostKey).value)
@@ -585,8 +585,8 @@ TEST_F(PSDSchurSolverTest, MarginalizationTest) {
   auto result = solver.solveLevenbergMarquardt(variableContainer,
                                                errorTermContainer, prior);
 
-  std::cout << "Iterations: " << result.whitenedSqError.size()
-            << " final error: " << result.whitenedSqError.back() << std::endl;
+  LOG_INFO("Iterations: {}  final error: {}", result.whitenedSqError.size(),
+           result.whitenedSqError.back());
 
   // Verify that the errors have been reduced.
   errorTermContainer.at(errorTermKey1).evaluate(variableContainer, true);

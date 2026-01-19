@@ -3,6 +3,7 @@
 
 #include <type_traits>
 
+#include "TestUtils.h"
 #include "argmin/BlockVector.h"
 #include "argmin/ErrorTermBase.h"
 #include "argmin/GaussianPrior.h"
@@ -19,46 +20,7 @@
 #include "argmin/Variables/SimpleScalar.h"
 
 using namespace ArgMin;
-
-class DifferentSimpleScalar : public SimpleScalar {
- public:
-  DifferentSimpleScalar(double val) : SimpleScalar(val) {}
-};
-
-class DifferenceErrorTerm
-    : public ErrorTermBase<Scalar<double>, Dimension<1>,
-                           VariableGroup<SimpleScalar, DifferentSimpleScalar>> {
- public:
-  DifferenceErrorTerm(VariableKey<SimpleScalar> key1,
-                      VariableKey<DifferentSimpleScalar> key2) {
-    std::get<0>(variableKeys) = key1;
-    std::get<1>(variableKeys) = key2;
-  }
-
-  template <typename... Variables>
-  void evaluate(VariableContainer<Variables...> &variables, bool relinearize) {
-    EXPECT_TRUE(checkVariablePointerConsistency(variables));
-
-    auto &var1 = *(std::get<0>(variablePointers));
-    auto &var2 = *(std::get<1>(variablePointers));
-
-    residual(0, 0) = var2.value - var1.value;
-
-    if (relinearize) {
-      auto &jac1 = (std::get<0>(variableJacobians));
-      auto &jac2 = (std::get<1>(variableJacobians));
-
-      jac1(0, 0) = -1;
-      jac2(0, 0) = 1;
-
-      linearizationValid = true;
-    } else {
-      linearizationValid = false;
-    }
-
-    information.setIdentity();
-  }
-};
+using namespace ArgMin::Test;
 
 TEST(ArgMin, Basic) {}
 

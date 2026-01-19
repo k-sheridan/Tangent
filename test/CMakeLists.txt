@@ -4,6 +4,9 @@ add_executable(ArgMinTests
   TestSlotMap.cpp
   TestSlotArray.cpp
   TestParallelAlgorithms.cpp
+  TestEdgeCases.cpp
+  TestVariableTypes.cpp
+  TestMarginalization.cpp
 )
 
 target_link_libraries(ArgMinTests PRIVATE

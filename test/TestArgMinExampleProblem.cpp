@@ -3,12 +3,14 @@
 #include <random>
 #include <type_traits>
 
+#include "TestUtils.h"
 #include "argmin/BlockVector.h"
 #include "argmin/ErrorTermBase.h"
 #include "argmin/ErrorTermValidator.h"
 #include "argmin/GaussianPrior.h"
 #include "argmin/HuberLossFunction.h"
 #include "argmin/Key.h"
+#include "argmin/Logging.h"
 #include "argmin/Marginalizer.h"
 #include "argmin/MetaHelpers.h"
 #include "argmin/PSDSchurSolver.h"
@@ -19,148 +21,8 @@
 #include "argmin/Variables/SE3.h"
 #include "argmin/Variables/SimpleScalar.h"
 
-#include "argmin/Logging.h"
-
 using namespace ArgMin;
-
-class DifferentSimpleScalar : public SimpleScalar {
- public:
-  DifferentSimpleScalar(double val) : SimpleScalar(val) {}
-};
-
-class DifferenceErrorTerm
-    : public ErrorTermBase<Scalar<double>, Dimension<1>,
-                           VariableGroup<SimpleScalar, DifferentSimpleScalar>> {
- public:
-  DifferenceErrorTerm(VariableKey<SimpleScalar> key1,
-                      VariableKey<DifferentSimpleScalar> key2) {
-    std::get<0>(variableKeys) = key1;
-    std::get<1>(variableKeys) = key2;
-  }
-
-  template <typename... Variables>
-  void evaluate(VariableContainer<Variables...> &variables, bool relinearize) {
-    EXPECT_TRUE(checkVariablePointerConsistency(variables));
-
-    auto &var1 = *(std::get<0>(variablePointers));
-    auto &var2 = *(std::get<1>(variablePointers));
-
-    residual(0, 0) = var2.value - var1.value;
-
-    if (relinearize) {
-      auto &jac1 = (std::get<0>(variableJacobians));
-      auto &jac2 = (std::get<1>(variableJacobians));
-
-      jac1(0, 0) = -1;
-      jac2(0, 0) = 1;
-
-      linearizationValid = true;
-    } else {
-      linearizationValid = false;
-    }
-
-    information.setIdentity();
-  }
-};
-
-class RelativeReprojectionError
-    : public ErrorTermBase<
-          Scalar<double>, Dimension<2>,
-          VariableGroup<ArgMin::SE3, ArgMin::SE3, ArgMin::InverseDepth>> {
- public:
-  Eigen::Vector2d bearing;
-  Eigen::Vector2d z;
-
-  RelativeReprojectionError(VariableKey<ArgMin::SE3> hostFrame,
-                            VariableKey<ArgMin::SE3> targetFrame,
-                            VariableKey<ArgMin::InverseDepth> dinv,
-                            Eigen::Vector2d bearingMeasurement,
-                            Eigen::Vector2d bearingInHost) {
-    std::get<0>(variableKeys) = hostFrame;
-    std::get<1>(variableKeys) = targetFrame;
-    std::get<2>(variableKeys) = dinv;
-    z = bearingMeasurement;
-    bearing = bearingInHost;
-    information.setIdentity();
-  }
-
-  template <typename... Variables>
-  void evaluate(VariableContainer<Variables...> &variables,
-                bool relinearize = false) {
-    EXPECT_TRUE(checkVariablePointerConsistency(variables));
-
-    Sophus::SE3d &host = std::get<0>(variablePointers)->value;
-    Sophus::SE3d &target = std::get<1>(variablePointers)->value;
-    double &inverseDepth = std::get<2>(variablePointers)->value;
-
-    EXPECT_GT(inverseDepth, 0);
-
-    // Compute the residual.
-    auto pointInHost =
-        Eigen::Vector3d(bearing(0, 0) / inverseDepth,
-                        bearing(1, 0) / inverseDepth, 1 / inverseDepth);
-    Eigen::Vector3d pointInTarget = target.inverse() * host * pointInHost;
-
-    EXPECT_GT(pointInTarget(2, 0), 0);
-
-    residual = z - Eigen::Vector2d(pointInTarget(0, 0) / pointInTarget(2, 0),
-                                   pointInTarget(1, 0) / pointInTarget(2, 0));
-
-    if (relinearize) {
-      Eigen::Matrix<double, 2, 6> &hostJacobian =
-          (std::get<0>(variableJacobians));
-      Eigen::Matrix<double, 2, 6> &targetJacobian =
-          (std::get<1>(variableJacobians));
-      Eigen::Matrix<double, 2, 1> &dinvJacobian =
-          (std::get<2>(variableJacobians));
-
-      Eigen::Matrix<double, 2, 3> dPi;
-      dPi << 1 / pointInTarget(2, 0), 0,
-          -pointInTarget(0, 0) / (pointInTarget(2, 0) * pointInTarget(2, 0)), 0,
-          1 / pointInTarget(2, 0),
-          -pointInTarget(1, 0) / (pointInTarget(2, 0) * pointInTarget(2, 0));
-
-      EXPECT_NEAR(dPi(1, 1), 1 / pointInTarget(2, 0), 1e-6);
-
-      // Compute the jacobians.
-      auto A = target.so3().matrix();
-      auto B = host.so3().matrix();
-      // T =
-      // graph.extrinsics.getImu2CameraTransform(graph.FrameContainer{observationFrameIdx}.camID);
-      // C = T(1:3, 1:3);
-
-      auto &d = target.translation();
-      auto &e = host.translation();
-      // f = T(1:3, 4);
-
-      // dinv =
-      // graph.FrameContainer{landmarkFrameIdx}.landmarks{landmarkIdx}.dinv; u0
-      // =
-      // [graph.FrameContainer{landmarkFrameIdx}.landmarks{landmarkIdx}.bearing;
-      // 1];
-
-      // J_dinv = -projJac * dPi * (C'*A'*B*C*u0*1/dinv^2);
-      dinvJacobian = dPi * (A.transpose() * B * pointInHost * 1 / inverseDepth);
-
-      // J_dphi_o = projJac * dPi * (C' * so3Hat(A'*(B*C*u0*(1/dinv) + B*f + e -
-      // d)));
-      targetJacobian.block(0, 0, 2, 3) =
-          -dPi * (Sophus::SO3d::hat(A.transpose() * (B * pointInHost + e - d)));
-      // J_dt_o = -projJac * dPi * (C'*A');
-      targetJacobian.block(0, 3, 2, 3) = dPi * (A.transpose());
-
-      // J_dphi_o = -projJac * dPi * C'*A'*B * so3Hat(C*u0/dinv + f);
-      hostJacobian.block(0, 0, 2, 3) =
-          dPi * A.transpose() * B * Sophus::SO3d::hat(pointInHost);
-      // J_dt_o = projJac * dPi * (C'*A');
-      hostJacobian.block(0, 3, 2, 3) = -dPi * (A.transpose());
-
-      linearizationValid = true;
-    } else {
-      linearizationValid = false;
-    }
-  }
-};
+using namespace ArgMin::Test;
 
 /**
  * Set up a basic SLAM problem with 4 variable types. 2 correlated and 2

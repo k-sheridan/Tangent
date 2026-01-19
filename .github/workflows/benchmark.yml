@@ -25,10 +25,10 @@ jobs:
             ${{ runner.os }}-buildx-normal-
 
       - name: Build benchmark image
-        run: docker-compose build benchmark
+        run: docker compose build benchmark
 
       - name: Run benchmarks
-        run: docker-compose up --exit-code-from benchmark benchmark 2>&1 | tee benchmark-results.txt
+        run: docker compose up --exit-code-from benchmark benchmark 2>&1 | tee benchmark-results.txt
 
       - name: Upload benchmark results
         uses: actions/upload-artifact@v4
@@ -56,10 +56,10 @@ jobs:
             ${{ runner.os }}-buildx-asan-
 
       - name: Build ASAN benchmark image
-        run: docker-compose build benchmark-asan
+        run: docker compose build benchmark-asan
 
       - name: Run benchmarks with ASAN
-        run: docker-compose up --exit-code-from benchmark-asan benchmark-asan 2>&1 | tee benchmark-results-asan.txt
+        run: docker compose up --exit-code-from benchmark-asan benchmark-asan 2>&1 | tee benchmark-results-asan.txt
 
       - name: Upload benchmark results
         uses: actions/upload-artifact@v4
@@ -87,10 +87,10 @@ jobs:
             ${{ runner.os }}-buildx-ubsan-
 
       - name: Build UBSAN benchmark image
-        run: docker-compose build benchmark-ubsan
+        run: docker compose build benchmark-ubsan
 
       - name: Run benchmarks with UBSAN
-        run: docker-compose up --exit-code-from benchmark-ubsan benchmark-ubsan 2>&1 | tee benchmark-results-ubsan.txt
+        run: docker compose up --exit-code-from benchmark-ubsan benchmark-ubsan 2>&1 | tee benchmark-results-ubsan.txt
 
       - name: Upload benchmark results
         uses: actions/upload-artifact@v4

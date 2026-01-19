@@ -25,10 +25,10 @@ jobs:
             ${{ runner.os }}-buildx-normal-
 
       - name: Build test image
-        run: docker-compose build test
+        run: docker compose build test
 
       - name: Run tests
-        run: docker-compose up --exit-code-from test test
+        run: docker compose up --exit-code-from test test
 
   test-asan:
     name: Test (AddressSanitizer)
@@ -49,10 +49,10 @@ jobs:
             ${{ runner.os }}-buildx-asan-
 
       - name: Build ASAN test image
-        run: docker-compose build test-asan
+        run: docker compose build test-asan
 
       - name: Run tests with ASAN
-        run: docker-compose up --exit-code-from test-asan test-asan
+        run: docker compose up --exit-code-from test-asan test-asan
 
   test-tsan:
     name: Test (ThreadSanitizer)
@@ -73,10 +73,10 @@ jobs:
             ${{ runner.os }}-buildx-tsan-
 
       - name: Build TSAN test image
-        run: docker-compose build test-tsan
+        run: docker compose build test-tsan
 
       - name: Run tests with TSAN
-        run: docker-compose up --exit-code-from test-tsan test-tsan
+        run: docker compose up --exit-code-from test-tsan test-tsan
 
   test-ubsan:
     name: Test (UndefinedBehaviorSanitizer)
@@ -97,7 +97,7 @@ jobs:
             ${{ runner.os }}-buildx-ubsan-
 
       - name: Build UBSAN test image
-        run: docker-compose build test-ubsan
+        run: docker compose build test-ubsan
 
       - name: Run tests with UBSAN
-        run: docker-compose up --exit-code-from test-ubsan test-ubsan
+        run: docker compose up --exit-code-from test-ubsan test-ubsan

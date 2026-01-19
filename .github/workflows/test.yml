@@ -1,0 +1,103 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-normal:
+    name: Test (Normal)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-normal-${{ hashFiles('**/Dockerfile', '**/CMakeLists.txt', 'cmake/**') }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-normal-
+
+      - name: Build test image
+        run: docker compose build test
+
+      - name: Run tests
+        run: docker compose up --exit-code-from test test
+
+  test-asan:
+    name: Test (AddressSanitizer)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache-asan
+          key: ${{ runner.os }}-buildx-asan-${{ hashFiles('**/Dockerfile', '**/CMakeLists.txt', 'cmake/**') }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-asan-
+
+      - name: Build ASAN test image
+        run: docker compose build test-asan
+
+      - name: Run tests with ASAN
+        run: docker compose up --exit-code-from test-asan test-asan
+
+  test-tsan:
+    name: Test (ThreadSanitizer)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache-tsan
+          key: ${{ runner.os }}-buildx-tsan-${{ hashFiles('**/Dockerfile', '**/CMakeLists.txt', 'cmake/**') }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-tsan-
+
+      - name: Build TSAN test image
+        run: docker compose build test-tsan
+
+      - name: Run tests with TSAN
+        run: docker compose up --exit-code-from test-tsan test-tsan
+
+  test-ubsan:
+    name: Test (UndefinedBehaviorSanitizer)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache-ubsan
+          key: ${{ runner.os }}-buildx-ubsan-${{ hashFiles('**/Dockerfile', '**/CMakeLists.txt', 'cmake/**') }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-ubsan-
+
+      - name: Build UBSAN test image
+        run: docker compose build test-ubsan
+
+      - name: Run tests with UBSAN
+        run: docker compose up --exit-code-from test-ubsan test-ubsan

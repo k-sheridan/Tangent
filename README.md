@@ -1,5 +1,8 @@
 # ArgMin
 
+[![Tests](https://github.com/k-sheridan/ArgMin/actions/workflows/test.yml/badge.svg)](https://github.com/k-sheridan/ArgMin/actions/workflows/test.yml)
+[![Benchmarks](https://github.com/k-sheridan/ArgMin/actions/workflows/benchmark.yml/badge.svg)](https://github.com/k-sheridan/ArgMin/actions/workflows/benchmark.yml)
+
 **Header-only generic optimizer for manifold-based nonlinear least squares**
 
 Originally designed for sliding window estimation in visual SLAM and odometry.

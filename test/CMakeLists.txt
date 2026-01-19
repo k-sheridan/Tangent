@@ -7,6 +7,7 @@ add_executable(ArgMinTests
   TestEdgeCases.cpp
   TestVariableTypes.cpp
   TestMarginalization.cpp
+  TestSSEOptimizer.cpp
 )
 
 target_link_libraries(ArgMinTests PRIVATE

@@ -6,7 +6,7 @@ import subprocess
 # -- Project information -----------------------------------------------------
 
 project = 'ArgMin'
-copyright = '2024, Kevin Sheridan'
+copyright = '2019, Kevin Sheridan'
 author = 'Kevin Sheridan'
 version = '1.0.0'
 release = '1.0.0'

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Containers.h"
-#include "Key.h"
-#include "MetaHelpers.h"
+#include "argmin/Optimization/OptimizerContainers.h"
+#include "argmin/Containers/Key.h"
+#include "argmin/Types/MetaHelpers.h"
 
 namespace ArgMin {
 

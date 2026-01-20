@@ -2,7 +2,7 @@
 
 #include <sophus/se3.hpp>
 
-#include "argmin/OptimizableVariable.h"
+#include "argmin/Variables/OptimizableVariable.h"
 
 namespace ArgMin {
 

@@ -3,10 +3,10 @@
 #include <map>
 #include <tuple>
 #include <Eigen/Core>
-#include "argmin/MetaHelpers.h"
-#include "argmin/SlotMap.h"
-#include "argmin/Containers.h"
-#include "argmin/BlockVector.h"
+#include "argmin/Types/MetaHelpers.h"
+#include "argmin/Containers/SlotMap.h"
+#include "argmin/Optimization/OptimizerContainers.h"
+#include "argmin/Types/BlockVector.h"
 
 namespace ArgMin
 {

@@ -2,13 +2,13 @@
 
 #include <Eigen/Core>
 
-#include "MetaHelpers.h"
-#include "argmin/BlockVector.h"
-#include "argmin/Containers.h"
-#include "argmin/Key.h"
-#include "argmin/SparseBlockMatrix.h"
-#include "argmin/SparseBlockRow.h"
-#include "argmin/Logging.h"
+#include "argmin/Types/MetaHelpers.h"
+#include "argmin/Types/BlockVector.h"
+#include "argmin/Optimization/OptimizerContainers.h"
+#include "argmin/Containers/Key.h"
+#include "argmin/Types/SparseBlockMatrix.h"
+#include "argmin/Types/SparseBlockRow.h"
+#include "argmin/Utilities/Logging.h"
 
 namespace ArgMin {
 

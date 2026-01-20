@@ -1,5 +1,5 @@
 
-#include "argmin/SlotMap.h"
+#include "argmin/Containers/SlotMap.h"
 #include <numeric>
 
 #include <gtest/gtest.h>

@@ -3,8 +3,8 @@
 
 #include <numeric>
 
-#include "argmin/SlotArray.h"
-#include "argmin/SlotMap.h"
+#include "argmin/Containers/SlotArray.h"
+#include "argmin/Containers/SlotMap.h"
 
 using namespace ArgMin;
 

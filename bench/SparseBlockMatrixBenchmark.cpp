@@ -1,8 +1,8 @@
 #include <benchmark/benchmark.h>
 
-#include "argmin/SparseBlockRow.h"
-#include "argmin/SparseBlockMatrix.h"
-#include "argmin/Containers.h"
+#include "argmin/Types/SparseBlockRow.h"
+#include "argmin/Types/SparseBlockMatrix.h"
+#include "argmin/Optimization/OptimizerContainers.h"
 #include "argmin/Variables/SE3.h"
 #include "argmin/Variables/InverseDepth.h"
 

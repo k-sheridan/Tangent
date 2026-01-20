@@ -1,8 +1,8 @@
 #pragma once
 
-#include "argmin/MetaHelpers.h"
-#include "argmin/Key.h"
-#include "argmin/Containers.h"
+#include "argmin/Types/MetaHelpers.h"
+#include "argmin/Containers/Key.h"
+#include "argmin/Optimization/OptimizerContainers.h"
 
 #include <limits>
 #include <vector>

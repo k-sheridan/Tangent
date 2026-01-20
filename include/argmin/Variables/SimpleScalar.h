@@ -1,6 +1,6 @@
 #pragma once
 
-#include "argmin/OptimizableVariable.h"
+#include "argmin/Variables/OptimizableVariable.h"
 
 namespace ArgMin
 {

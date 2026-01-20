@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SlotMap.h"
+#include "argmin/Containers/SlotMap.h"
 
 namespace ArgMin {
 

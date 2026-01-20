@@ -5,16 +5,16 @@
 #include <numeric>
 #include <type_traits>
 
-#include "BlockVector.h"
-#include "Containers.h"
-#include "GaussianPrior.h"
-#include "HuberLossFunction.h"
-#include "argmin/Logging.h"
-#include "MetaHelpers.h"
-#include "ParallelAlgorithms/ParallelAlgorithms.h"
-#include "Profiling.h"
-#include "SlotArray.h"
-#include "SlotMap.h"
+#include "argmin/Types/BlockVector.h"
+#include "argmin/Optimization/OptimizerContainers.h"
+#include "argmin/Types/GaussianPrior.h"
+#include "argmin/Optimization/HuberLossFunction.h"
+#include "argmin/Utilities/Logging.h"
+#include "argmin/Types/MetaHelpers.h"
+#include "argmin/ParallelAlgorithms/ParallelAlgorithms.h"
+#include "argmin/Utilities/Profiling.h"
+#include "argmin/Containers/SlotArray.h"
+#include "argmin/Containers/SlotMap.h"
 
 namespace ArgMin {
 

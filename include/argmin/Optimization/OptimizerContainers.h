@@ -1,8 +1,8 @@
 #pragma once
 
-#include "MetaHelpers.h"
-#include "SlotMap.h"
-#include "Key.h"
+#include "argmin/Types/MetaHelpers.h"
+#include "argmin/Containers/SlotMap.h"
+#include "argmin/Containers/Key.h"
 
 namespace ArgMin
 {

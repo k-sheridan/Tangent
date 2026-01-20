@@ -1,9 +1,9 @@
 #pragma once
 
-#include "argmin/SlotArray.h"
-#include "argmin/Key.h"
-#include "argmin/MetaHelpers.h"
-#include "argmin/Containers.h"
+#include "argmin/Containers/SlotArray.h"
+#include "argmin/Containers/Key.h"
+#include "argmin/Types/MetaHelpers.h"
+#include "argmin/Optimization/OptimizerContainers.h"
 #include <Eigen/Core>
 #include <tuple>
 

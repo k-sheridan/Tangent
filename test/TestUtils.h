@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "argmin/ErrorTermBase.h"
+#include "argmin/ErrorTerms/ErrorTermBase.h"
 #include "argmin/Variables/InverseDepth.h"
 #include "argmin/Variables/SE3.h"
 #include "argmin/Variables/SimpleScalar.h"

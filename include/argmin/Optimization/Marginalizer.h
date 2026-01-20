@@ -4,12 +4,12 @@
 #include <numeric>
 #include <type_traits>
 
-#include "ErrorTermBase.h"
-#include "argmin/Logging.h"
-#include "argmin/Containers.h"
-#include "argmin/GaussianPrior.h"
-#include "argmin/Key.h"
-#include "argmin/MetaHelpers.h"
+#include "argmin/ErrorTerms/ErrorTermBase.h"
+#include "argmin/Utilities/Logging.h"
+#include "argmin/Optimization/OptimizerContainers.h"
+#include "argmin/Types/GaussianPrior.h"
+#include "argmin/Containers/Key.h"
+#include "argmin/Types/MetaHelpers.h"
 
 namespace ArgMin {
 

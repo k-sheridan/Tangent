@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
 
 #include "TestUtils.h"
-#include "argmin/Containers.h"
-#include "argmin/GaussianPrior.h"
-#include "argmin/HuberLossFunction.h"
-#include "argmin/Logging.h"
-#include "argmin/Marginalizer.h"
-#include "argmin/PSDSchurSolver.h"
+#include "argmin/Optimization/OptimizerContainers.h"
+#include "argmin/Types/GaussianPrior.h"
+#include "argmin/Optimization/HuberLossFunction.h"
+#include "argmin/Utilities/Logging.h"
+#include "argmin/Optimization/Marginalizer.h"
+#include "argmin/Optimization/PSDSchurSolver.h"
 #include "argmin/Variables/InverseDepth.h"
 #include "argmin/Variables/SE3.h"
 #include "argmin/Variables/SimpleScalar.h"

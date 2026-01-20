@@ -1,8 +1,8 @@
 #pragma once
 
 #include <map>
-#include "argmin/MetaHelpers.h"
-#include "argmin/SparseBlockRow.h"
+#include "argmin/Types/MetaHelpers.h"
+#include "argmin/Types/SparseBlockRow.h"
 
 namespace ArgMin
 {

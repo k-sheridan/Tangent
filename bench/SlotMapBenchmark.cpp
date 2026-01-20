@@ -1,7 +1,7 @@
 
 #include <benchmark/benchmark.h>
 #include <algorithm>
-#include "argmin/SlotMap.h"
+#include "argmin/Containers/SlotMap.h"
 
 using namespace ArgMin;
 

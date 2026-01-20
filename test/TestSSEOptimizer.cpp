@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 
 #include "TestUtils.h"
-#include "argmin/GaussianPrior.h"
-#include "argmin/HuberLossFunction.h"
-#include "argmin/Marginalizer.h"
-#include "argmin/PSDSchurSolver.h"
-#include "argmin/SSEOptimizer.h"
+#include "argmin/Types/GaussianPrior.h"
+#include "argmin/Optimization/HuberLossFunction.h"
+#include "argmin/Optimization/Marginalizer.h"
+#include "argmin/Optimization/PSDSchurSolver.h"
+#include "argmin/Optimization/SSEOptimizer.h"
 #include "argmin/Variables/InverseDepth.h"
 #include "argmin/Variables/SE3.h"
 #include "argmin/Variables/SimpleScalar.h"

@@ -6,7 +6,7 @@ import subprocess
 # -- Project information -----------------------------------------------------
 
 project = 'Tangent'
-copyright = '2024, Kevin Sheridan'
+copyright = '2019, Kevin Sheridan'
 author = 'Kevin Sheridan'
 version = '1.0.0'
 release = '1.0.0'
@@ -32,6 +32,8 @@ html_title = 'Tangent'
 
 # Furo theme options
 html_theme_options = {
+    "light_logo": "tangent-logo-light.svg",
+    "dark_logo": "tangent-logo-dark.svg",
     "light_css_variables": {
         "color-brand-primary": "#4a90d9",
         "color-brand-content": "#4a90d9",
@@ -40,7 +42,7 @@ html_theme_options = {
         "color-brand-primary": "#6cb0f0",
         "color-brand-content": "#6cb0f0",
     },
-    "sidebar_hide_name": False,
+    "sidebar_hide_name": True,
     "navigation_with_keys": True,
 }
 

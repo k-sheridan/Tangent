@@ -1,3 +1,11 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/_static/tangent-logo-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="docs/_static/tangent-logo-light.svg">
+    <img src="docs/_static/tangent-logo-light.svg" alt="Tangent Logo" width="300">
+  </picture>
+</p>
+
 # Tangent
 
 [![Tests](https://github.com/k-sheridan/Tangent/actions/workflows/test.yml/badge.svg)](https://github.com/k-sheridan/Tangent/actions/workflows/test.yml)

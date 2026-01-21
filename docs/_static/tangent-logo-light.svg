@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="manifoldGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1e3a5f"/>
+      <stop offset="100%" style="stop-color:#2d5a87"/>
+    </linearGradient>
+    
+    <linearGradient id="planeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e85a4f;stop-opacity:0.9"/>
+      <stop offset="100%" style="stop-color:#e85a4f;stop-opacity:0.4"/>
+    </linearGradient>
+    
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1a1a1a"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="300" fill="#ffffff"/>
+  
+  <!-- Manifold (simple curved surface) -->
+  <path d="M 80 200 
+           Q 120 220 200 190 
+           Q 280 160 320 180
+           Q 340 140 310 100
+           Q 260 60 200 80
+           Q 140 100 100 130
+           Q 70 160 80 200 Z" 
+        fill="url(#manifoldGrad)" 
+        stroke="#4a90d9" 
+        stroke-width="1.5"/>
+  
+  <!-- Tangent plane -->
+  <path d="M 120 90 L 280 70 L 260 170 L 100 190 Z" 
+        fill="url(#planeGrad)" 
+        stroke="#e85a4f" 
+        stroke-width="1.5"/>
+  
+  <!-- Contact point -->
+  <circle cx="190" cy="130" r="5" fill="#1a1a1a"/>
+  
+  <!-- Tangent vectors with marker arrowheads -->
+  <g stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" fill="none" marker-end="url(#arrowhead)">
+    <line x1="190" y1="130" x2="248" y2="111"/>
+    <line x1="190" y1="130" x2="162" y2="158"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="200" y="250" 
+        text-anchor="middle" 
+        font-family="system-ui, -apple-system, sans-serif" 
+        font-size="32" 
+        font-weight="600" 
+        fill="#1a1a1a"
+        letter-spacing="2">tangent</text>
+</svg>

@@ -14,49 +14,33 @@
 
 **Header-only generic optimizer for manifold-based nonlinear least squares**
 
-Originally designed for sliding window estimation in visual SLAM and odometry.
-
 ## Features
 
-- SE3/SO3 manifold optimization with Lie algebra.
-- Built in marginalization support through Sparese Gaussian Prior.
-- Sparse Schur complement solver for exploiting sparsity in uncorrelated variables.
-- Cache-friendly SlotMap data structures (O(1) operations)
-- Compile-time type safety with template metaprogramming
-- Optional parallel algorithms for multi-threaded optimization
+- SE3/SO3 manifold optimization with Lie algebra
+- Automatic differentiation (no manual Jacobians needed)
+- Sparse Schur complement solver
+- Marginalization support via Sparse Gaussian Prior
+- Cache-friendly SlotMap containers (O(1) operations)
+- Compile-time type safety
 
-## Installation
+## Documentation
 
-**Add to your CMake project:**
-```cmake
-include(FetchContent)
-FetchContent_Declare(tangent
-  GIT_REPOSITORY https://github.com/k-sheridan/Tangent.git
-  GIT_TAG main
-)
-FetchContent_MakeAvailable(tangent)
-target_link_libraries(your_target PRIVATE Tangent::Tangent)
-```
+### [Getting Started](https://k-sheridan.github.io/Tangent/getting-started.html)
 
-## Usage
+Installation, requirements, and a quick start guide with code examples.
 
-Refer to [test/TestTangentExampleProblem.cpp](test/TestTangentExampleProblem.cpp) for an example on how to use.
+### [Concepts](https://k-sheridan.github.io/Tangent/concepts/index.html)
 
-## Testing & Benchmarking
+Deep dives into the core building blocks:
 
-**Docker:**
-```bash
-docker-compose up test       # Run All Tangent tests
-docker-compose up benchmark  # Run performance benchmarks
-```
+- **Variables** — Defining optimizable parameters on manifolds
+- **Error Terms** — Creating constraints between variables
+- **Autodiff** — How automatic differentiation works
 
-## Requirements
+### [API Reference](https://k-sheridan.github.io/Tangent/api/index.html)
 
-- C++20 compiler (GCC 10+, Clang 12+, MSVC 2019+)
-- CMake 3.20+
-- Eigen 3.4+ (auto-fetched if not found)
-- Sophus 1.22+ (auto-fetched if not found)
+Complete class and function documentation.
 
-## Notes 
+## Origin
 
-Tangent was originally developed as part of the [QDVO (Quasi-Direct Visual Odometry)](https://github.com/k-sheridan/qdvo) project.
+Tangent was originally developed as part of [QDVO (Quasi-Direct Visual Odometry)](https://github.com/k-sheridan/qdvo).

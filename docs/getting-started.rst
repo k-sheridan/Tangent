@@ -44,13 +44,13 @@ Quick Start
 
 .. code-block:: cpp
 
-   #include "tangent/ErrorTerms/ErrorTermBase.h"
+   #include "tangent/ErrorTerms/AutoDiffErrorTerm.h"
    using namespace Tangent;
 
    // Error term: wants two scalars to be equal
    class DifferenceError
-       : public ErrorTermBase<Scalar<double>, Dimension<1>,
-                              VariableGroup<SimpleScalar, SimpleScalar>> {
+       : public AutoDiffErrorTerm<DifferenceError, double, 1,
+                                  SimpleScalar, SimpleScalar> {
     public:
      DifferenceError(VariableKey<SimpleScalar> k1, VariableKey<SimpleScalar> k2) {
        std::get<0>(variableKeys) = k1;
@@ -58,20 +58,13 @@ Quick Start
        information.setIdentity();
      }
 
-     template <typename... Vars>
-     void evaluate(VariableContainer<Vars...>& vars, bool relinearize) {
-       auto& v1 = *std::get<0>(variablePointers);
-       auto& v2 = *std::get<1>(variablePointers);
-
-       // Compute residual
-       residual(0) = v2.value - v1.value;
-
-       // Compute Jacobians if requested
-       if (relinearize) {
-         std::get<0>(variableJacobians)(0, 0) = -1;  // d(residual)/d(v1)
-         std::get<1>(variableJacobians)(0, 0) =  1;  // d(residual)/d(v2)
-         linearizationValid = true;
-       }
+     // Templated error function - Jacobians are computed automatically
+     template <typename T, typename Scalar1, typename Scalar2>
+     Eigen::Matrix<T, 1, 1> computeError(const Scalar1& v1,
+                                         const Scalar2& v2) const {
+       Eigen::Matrix<T, 1, 1> error;
+       error(0) = v2 - v1;
+       return error;
      }
    };
 
@@ -119,9 +112,11 @@ Quick Start
 
 **Key concepts:**
 
-- **Variables**: Inherit from ``OptimizableVariable``, define ``dimension`` and ``update(delta)``
-- **Error terms**: Inherit from ``ErrorTermBase``, implement ``evaluate()`` to compute residual + Jacobians
+- **Variables**: Inherit from ``OptimizableVariableBase``, define ``dimension`` and ``update(delta)``
+- **Error terms**: Inherit from ``AutoDiffErrorTerm``, implement ``computeError()`` - Jacobians are computed automatically
 - **Keys**: Type-safe handles for accessing variables/error terms in containers
+
+See :doc:`concepts/index` for more details on variables, error terms, and autodiff.
 
 For a complete working example with SE3 poses and landmarks, see
 `test/TestSSEOptimizer.cpp <https://github.com/k-sheridan/Tangent/blob/master/test/TestSSEOptimizer.cpp>`_.

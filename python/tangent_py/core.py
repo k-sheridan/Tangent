@@ -93,26 +93,26 @@ def define_error_term(cpp_code: str):
         cpp_code: C++ code string defining the error term class
 
     Example:
-        define_error_term('''
-        class DiffError : public Tangent::AutoDiffErrorTerm<DiffError, double, 1,
-                                                             Tangent::SimpleScalar,
-                                                             Tangent::SimpleScalar> {
-        public:
-            DiffError(Tangent::VariableKey<Tangent::SimpleScalar> k1,
-                      Tangent::VariableKey<Tangent::SimpleScalar> k2) {
-                std::get<0>(variableKeys) = k1;
-                std::get<1>(variableKeys) = k2;
-                information.setIdentity();
-            }
-
-            template <typename T, typename V1, typename V2>
-            Eigen::Matrix<T, 1, 1> computeError(const V1& v1, const V2& v2) const {
-                Eigen::Matrix<T, 1, 1> err;
-                err(0) = v2 - v1;
-                return err;
-            }
-        };
-        ''')
+        >>> define_error_term('''
+        ... class DiffError : public Tangent::AutoDiffErrorTerm<DiffError, double, 1,
+        ...                                                      Tangent::SimpleScalar,
+        ...                                                      Tangent::SimpleScalar> {
+        ... public:
+        ...     DiffError(Tangent::VariableKey<Tangent::SimpleScalar> k1,
+        ...               Tangent::VariableKey<Tangent::SimpleScalar> k2) {
+        ...         std::get<0>(variableKeys) = k1;
+        ...         std::get<1>(variableKeys) = k2;
+        ...         information.setIdentity();
+        ...     }
+        ...
+        ...     template <typename T, typename V1, typename V2>
+        ...     Eigen::Matrix<T, 1, 1> computeError(const V1& v1, const V2& v2) const {
+        ...         Eigen::Matrix<T, 1, 1> err;
+        ...         err(0) = v2 - v1;
+        ...         return err;
+        ...     }
+        ... };
+        ... ''')
     """
     init()
     cppyy.cppdef(cpp_code)

@@ -47,28 +47,71 @@ Creating an Autodiff Error Term
 
 Inherit from ``AutoDiffErrorTerm`` (see :doc:`/api/error-terms`) and implement a single templated ``computeError()`` method:
 
-.. code-block:: cpp
+.. tab:: C++
 
-   class DifferenceErrorAutoDiff
-       : public AutoDiffErrorTerm<DifferenceErrorAutoDiff, double, 1,
-                                  SimpleScalar, SimpleScalar> {
-    public:
-     DifferenceErrorAutoDiff(VariableKey<SimpleScalar> k1,
-                             VariableKey<SimpleScalar> k2) {
-       std::get<0>(variableKeys) = k1;
-       std::get<1>(variableKeys) = k2;
-       information.setIdentity();
-     }
+   .. code-block:: cpp
 
-     // This single method works for both double (fast) and Jet (autodiff)
-     template <typename T, typename Scalar1, typename Scalar2>
-     Eigen::Matrix<T, 1, 1> computeError(const Scalar1& v1,
-                                         const Scalar2& v2) const {
-       Eigen::Matrix<T, 1, 1> error;
-       error(0) = v2 - v1;
-       return error;
-     }
-   };
+      class DifferenceErrorAutoDiff
+          : public AutoDiffErrorTerm<DifferenceErrorAutoDiff, double, 1,
+                                     SimpleScalar, SimpleScalar> {
+       public:
+        DifferenceErrorAutoDiff(VariableKey<SimpleScalar> k1,
+                                VariableKey<SimpleScalar> k2) {
+          std::get<0>(variableKeys) = k1;
+          std::get<1>(variableKeys) = k2;
+          information.setIdentity();
+        }
+
+        // This single method works for both double (fast) and Jet (autodiff)
+        template <typename T, typename Scalar1, typename Scalar2>
+        Eigen::Matrix<T, 1, 1> computeError(const Scalar1& v1,
+                                            const Scalar2& v2) const {
+          Eigen::Matrix<T, 1, 1> error;
+          error(0) = v2 - v1;
+          return error;
+        }
+      };
+
+.. tab:: Python
+
+   The ``error_term_template()`` helper generates the C++ boilerplate for autodiff
+   error terms. You only need to provide the error computation:
+
+   .. code-block:: python
+
+      import tangent_py as tg
+
+      tg.init()
+
+      code = tg.error_term_template(
+          name="DifferenceError",
+          residual_dim=1,
+          var_types=["SimpleScalar", "SimpleScalar"],
+          compute_body="err(0) = v1 - v0;"
+      )
+      tg.define_error_term(code)
+
+   The ``compute_body`` is a C++ expression using the same autodiff-compatible
+   syntax as ``computeError()``. Variables are available as ``v0``, ``v1``, etc.
+   The residual vector is ``err``.
+
+   For error terms with additional data (like a measurement or target value):
+
+   .. code-block:: python
+
+      code = tg.error_term_template(
+          name="ScalarPrior",
+          residual_dim=1,
+          var_types=["SimpleScalar"],
+          compute_body="err(0) = v0 - target;",
+          extra_members="double target;",
+          extra_constructor_params="double t",
+          extra_constructor_init="target = t;"
+      )
+      tg.define_error_term(code)
+
+   For full control, you can also pass raw C++ to ``define_error_term()`` directly
+   (see :doc:`error-terms`).
 
 The ``computeError`` method receives either:
 

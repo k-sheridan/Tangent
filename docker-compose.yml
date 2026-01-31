@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # Build the library
+  # Build the library (cpp)
   build:
     build:
       context: .
@@ -12,7 +12,7 @@ services:
       - build-cache:/tangent/build
     working_dir: /tangent
 
-  # Run tests
+  # Run cpp tests
   test:
     build:
       context: .
@@ -25,7 +25,7 @@ services:
       - build-cache:/tangent/build
     command: ["./test/TangentTests", "--gtest_color=yes"]
 
-  # Run benchmarks
+  # Run cpp benchmarks
   benchmark:
     build:
       context: .
@@ -37,20 +37,6 @@ services:
       - .:/tangent
       - build-cache:/tangent/build
     command: ["./bench/TangentBenchmarks", "--benchmark_repetitions=3"]
-
-  # Development environment
-  dev:
-    build:
-      context: .
-      target: dev
-    image: tangent:dev
-    volumes:
-      - .:/tangent
-      - build-cache:/tangent/build
-    working_dir: /tangent
-    stdin_open: true
-    tty: true
-    command: ["/bin/bash"]
 
   # Generate documentation
   docs:
@@ -79,7 +65,7 @@ services:
              echo 'Documentation available at http://localhost:8000' &&
              python3 -m http.server 8000 --directory docs/_build/html"
 
-  # ASAN tests
+  # cpp ASAN tests
   test-asan:
     build:
       context: .
@@ -90,7 +76,7 @@ services:
       - build-cache-asan:/tangent/build
     command: ["./test/TangentTests", "--gtest_color=yes"]
 
-  # ASAN benchmarks
+  # cpp ASAN benchmarks
   benchmark-asan:
     build:
       context: .
@@ -101,7 +87,7 @@ services:
       - build-cache-asan:/tangent/build
     command: ["./bench/TangentBenchmarks", "--benchmark_repetitions=3"]
 
-  # TSAN tests
+  # cpp TSAN tests
   test-tsan:
     build:
       context: .
@@ -117,7 +103,7 @@ services:
     security_opt:
       - seccomp=unconfined
 
-  # UBSAN tests
+  # cpp UBSAN tests
   test-ubsan:
     build:
       context: .
@@ -128,7 +114,7 @@ services:
       - build-cache-ubsan:/tangent/build
     command: ["./test/TangentTests", "--gtest_color=yes"]
 
-  # UBSAN benchmarks
+  # cpp UBSAN benchmarks
   benchmark-ubsan:
     build:
       context: .
@@ -148,18 +134,6 @@ services:
     volumes:
       - .:/tangent
     command: pytest python/tests/ -v
-
-  # Python development environment
-  python-dev:
-    build:
-      context: .
-      dockerfile: python/Dockerfile
-    image: tangent:python
-    volumes:
-      - .:/tangent
-    stdin_open: true
-    tty: true
-    command: /bin/bash
 
 volumes:
   build-cache:

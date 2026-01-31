@@ -34,26 +34,55 @@ Tangent provides the following built in variables (see :doc:`/api/variables` for
 Creating Custom Variables
 -------------------------
 
-To create a custom variable, inherit from ``OptimizableVariableBase`` and implement the ``update()`` method:
+.. tab:: C++
 
-.. code-block:: cpp
+   To create a custom variable, inherit from ``OptimizableVariableBase`` and implement the ``update()`` method:
 
-   #include "tangent/Variables/OptimizableVariable.h"
+   .. code-block:: cpp
 
-   class MyScalar : public OptimizableVariableBase<double, 1> {
-    public:
-     double value = 0.0;
+      #include "tangent/Variables/OptimizableVariable.h"
 
-     MyScalar() = default;
-     MyScalar(double v) : value(v) {}
+      class MyScalar : public OptimizableVariableBase<double, 1> {
+       public:
+        double value = 0.0;
 
-     void update(const Eigen::Matrix<double, 1, 1>& dx) {
-       value += dx(0);
-     }
-   };
+        MyScalar() = default;
+        MyScalar(double v) : value(v) {}
+
+        void update(const Eigen::Matrix<double, 1, 1>& dx) {
+          value += dx(0);
+        }
+      };
+
+.. tab:: Python
+
+   Custom variable types are defined in C++. From Python, you have access to all
+   built-in variable types without any additional setup:
+
+   .. code-block:: python
+
+      import tangent_py as tg
+
+      tg.init()
+
+      x = tg.Tangent.SimpleScalar(10.0)
+      d = tg.Tangent.InverseDepth(0.5)
+      pose = tg.Tangent.SE3()
+      rot = tg.Tangent.SO3()
+
+   If you need a custom variable type, define it in C++ and include the header in
+   a C++ project, or use ``tg.define_error_term()`` to JIT compile a custom type
+   for advanced use cases.
+
 
 Autodiff Support
 ----------------
+
+.. note::
+
+   This section applies to C++ custom variables only. Python users working with
+   the built-in variable types (``SimpleScalar``, ``SE3``, ``SO3``, ``InverseDepth``)
+   do not need to implement these functions -- they are already provided.
 
 To support :doc:`autodiff`, you must define two free functions:
 

@@ -9,7 +9,16 @@ from .core import init
 
 @dataclass
 class OptimizationResult:
-    """Result of an optimization run."""
+    """Result of an optimization run.
+
+    Attributes:
+        iterations: Number of optimizer iterations performed.
+        initial_error: Total squared error before optimization.
+        final_error: Total squared error after optimization.
+        converged: Whether the optimizer converged to a minimum.
+        error_decreased: Whether the final error is less than the initial error.
+        error_history: List of total error values at each iteration.
+    """
     iterations: int
     initial_error: float
     final_error: float
@@ -26,19 +35,16 @@ class Optimizer:
     instantiation required by cppyy.
 
     Example:
-        opt = Optimizer(
-            variables=["SimpleScalar"],
-            error_terms=["DifferenceError"]
-        )
-
-        x = SimpleScalar(10.0)
-        y = SimpleScalar(0.0)
-
-        k1 = opt.add_variable(x)
-        k2 = opt.add_variable(y)
-
-        opt.add_error_term("DifferenceError", k1, k2)
-        result = opt.optimize()
+        >>> opt = Optimizer(
+        ...     variables=["SimpleScalar"],
+        ...     error_terms=["DifferenceError"]
+        ... )
+        >>> x = SimpleScalar(10.0)
+        >>> y = SimpleScalar(0.0)
+        >>> k1 = opt.add_variable(x)
+        >>> k2 = opt.add_variable(y)
+        >>> opt.add_error_term("DifferenceError", k1, k2)
+        >>> result = opt.optimize()
     """
 
     # Class-level counter for unique type names

@@ -21,34 +21,80 @@ Manual Jacobians
 
 When implementing manual Jacobians, you inherit from ``ErrorTermBase`` (see :doc:`/api/error-terms`) and implement the ``evaluate()`` method directly:
 
-.. code-block:: cpp
+.. tab:: C++
 
-   class DifferenceError
-       : public ErrorTermBase<Scalar<double>, Dimension<1>,
-                              VariableGroup<SimpleScalar, SimpleScalar>> {
-    public:
-     DifferenceError(VariableKey<SimpleScalar> k1, VariableKey<SimpleScalar> k2) {
-       std::get<0>(variableKeys) = k1;
-       std::get<1>(variableKeys) = k2;
-       information.setIdentity();
-     }
+   .. code-block:: cpp
 
-     template <typename... Vars>
-     void evaluate(VariableContainer<Vars...>& vars, bool relinearize) {
-       auto& v1 = *std::get<0>(variablePointers);
-       auto& v2 = *std::get<1>(variablePointers);
+      class DifferenceError
+          : public ErrorTermBase<Scalar<double>, Dimension<1>,
+                                 VariableGroup<SimpleScalar, SimpleScalar>> {
+       public:
+        DifferenceError(VariableKey<SimpleScalar> k1, VariableKey<SimpleScalar> k2) {
+          std::get<0>(variableKeys) = k1;
+          std::get<1>(variableKeys) = k2;
+          information.setIdentity();
+        }
 
-       // Compute residual
-       residual(0) = v2.value - v1.value;
+        template <typename... Vars>
+        void evaluate(VariableContainer<Vars...>& vars, bool relinearize) {
+          auto& v1 = *std::get<0>(variablePointers);
+          auto& v2 = *std::get<1>(variablePointers);
 
-       // Compute Jacobians if requested
-       if (relinearize) {
-         std::get<0>(variableJacobians)(0, 0) = -1;  // d(residual)/d(v1)
-         std::get<1>(variableJacobians)(0, 0) =  1;  // d(residual)/d(v2)
-         linearizationValid = true;
-       }
-     }
-   };
+          // Compute residual
+          residual(0) = v2.value - v1.value;
+
+          // Compute Jacobians if requested
+          if (relinearize) {
+            std::get<0>(variableJacobians)(0, 0) = -1;  // d(residual)/d(v1)
+            std::get<1>(variableJacobians)(0, 0) =  1;  // d(residual)/d(v2)
+            linearizationValid = true;
+          }
+        }
+      };
+
+.. tab:: Python
+
+   Manual Jacobian error terms can be JIT compiled from Python using
+   ``define_error_term()`` with raw C++ code. Since error terms define
+   mathematical operations that the optimizer differentiates, they are always
+   written in C++:
+
+   .. code-block:: python
+
+      import tangent_py as tg
+
+      tg.init()
+      tg.define_error_term("""
+      class DifferenceError
+          : public Tangent::ErrorTermBase<
+                Tangent::Scalar<double>, Tangent::Dimension<1>,
+                Tangent::VariableGroup<Tangent::SimpleScalar, Tangent::SimpleScalar>> {
+       public:
+        DifferenceError(Tangent::VariableKey<Tangent::SimpleScalar> k1,
+                        Tangent::VariableKey<Tangent::SimpleScalar> k2) {
+          std::get<0>(variableKeys) = k1;
+          std::get<1>(variableKeys) = k2;
+          information.setIdentity();
+        }
+
+        template <typename... Vars>
+        void evaluate(Tangent::VariableContainer<Vars...>& vars, bool relinearize) {
+          auto& v1 = *std::get<0>(variablePointers);
+          auto& v2 = *std::get<1>(variablePointers);
+          residual(0) = v2.value - v1.value;
+          if (relinearize) {
+            std::get<0>(variableJacobians)(0, 0) = -1;
+            std::get<1>(variableJacobians)(0, 0) =  1;
+            linearizationValid = true;
+          }
+        }
+      };
+      """)
+
+   When JIT compiling from Python, all Tangent types must be fully qualified
+   with the ``Tangent::`` namespace prefix, since the code runs outside
+   ``using namespace Tangent``.
+
 
 Using Automatic Differentiation
 -------------------------------

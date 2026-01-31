@@ -34,24 +34,26 @@ def error_term_template(
         C++ code string defining the error term class
 
     Examples:
-        # Binary constraint between two variables:
-        code = error_term_template(
-            name="DifferenceError",
-            residual_dim=1,
-            var_types=["SimpleScalar", "SimpleScalar"],
-            compute_body="err(0) = v1 - v0;"
-        )
+        Binary constraint between two variables:
 
-        # Unary prior with a target value:
-        code = error_term_template(
-            name="ScalarPrior",
-            residual_dim=1,
-            var_types=["SimpleScalar"],
-            compute_body="err(0) = v0 - target;",
-            extra_members="double target;",
-            extra_constructor_params="double t",
-            extra_constructor_init="target = t;"
-        )
+        >>> code = error_term_template(
+        ...     name="DifferenceError",
+        ...     residual_dim=1,
+        ...     var_types=["SimpleScalar", "SimpleScalar"],
+        ...     compute_body="err(0) = v1 - v0;"
+        ... )
+
+        Unary prior with a target value:
+
+        >>> code = error_term_template(
+        ...     name="ScalarPrior",
+        ...     residual_dim=1,
+        ...     var_types=["SimpleScalar"],
+        ...     compute_body="err(0) = v0 - target;",
+        ...     extra_members="double target;",
+        ...     extra_constructor_params="double t",
+        ...     extra_constructor_init="target = t;"
+        ... )
     """
     # Build variable type list for template
     var_list = ", ".join(f"Tangent::{v}" for v in var_types)

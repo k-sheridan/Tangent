@@ -1,15 +1,28 @@
 Tangent Documentation
 ====================
 
-**Header-only generic optimizer for manifold-based nonlinear least squares**
+**Header-only generic optimizer for manifold-based nonlinear least squares with built in marginalization support**
 
-Tangent is a C++20 library originally designed for sliding window estimation in visual SLAM and odometry.
+Features
+--------
+
+- SE3/SO3 manifold optimization with Lie algebra
+- **Python** support through JIT compilation
+- Built-in marginalization support through Sparse Gaussian Prior
+- Sparse Schur Solver for exploiting sparsity in uncorrelated variables
+- Compile-time type safety with template metaprogramming
+- Optional parallel algorithms for multi-threaded optimization
+
+
+Table of Contents
+--------
 
 .. toctree::
    :maxdepth: 2
    :caption: Getting Started
 
-   getting-started
+   getting-started-cpp
+   getting-started-python
 
 .. toctree::
    :maxdepth: 2
@@ -19,20 +32,19 @@ Tangent is a C++20 library originally designed for sliding window estimation in 
 
 .. toctree::
    :maxdepth: 2
-   :caption: API Reference
+   :caption: C++ API Reference
 
-   api/index
+   api/optimization
+   api/variables
+   api/containers
+   api/types
+   api/error-terms
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Python API Reference
 
-Features
---------
-
-- SE3/SO3 manifold optimization with Lie algebra
-- Built-in marginalization support through Sparse Gaussian Prior
-- Sparse Schur complement solver for exploiting sparsity in uncorrelated variables
-- Cache-friendly SlotMap data structures (O(1) operations)
-- Compile-time type safety with template metaprogramming
-- Optional parallel algorithms for multi-threaded optimization
+   api/python
 
 
 Indices and tables
